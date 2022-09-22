@@ -166,7 +166,8 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         context = {'request': request}
         return RecipeListSerializer(
-            instance, context=context).data
+            instance, context=context
+        ).data
 
 
 class RecipeRepresentationSerializer(serializers.ModelSerializer):
@@ -195,7 +196,8 @@ class FavoriteSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         context = {'request': request}
         return RecipeRepresentationSerializer(
-            instance.recipe, context=context).data
+            instance.recipe, context=context
+        ).data
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
@@ -220,4 +222,5 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         context = {'request': request}
         return RecipeRepresentationSerializer(
-            instance.recipe, context=context).data
+            instance.recipe, context=context
+        ).data

@@ -1,8 +1,9 @@
-from api.models import Recipe
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
+
 from users.models import Follow, User
+from api.models import Recipe
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
@@ -11,7 +12,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         fields = ('email', 'username', 'first_name', 'last_name', 'password')
 
 
-class CustomUserSerializer(UserSerializer):
+class SubscribedUserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -91,7 +92,8 @@ class FollowListSerializer(serializers.ModelSerializer):
         else:
             recipes = obj.recipes.all()
         return FollowRecipesSerializer(
-            recipes, many=True, context=context).data
+            recipes, many=True, context=context
+        ).data
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
