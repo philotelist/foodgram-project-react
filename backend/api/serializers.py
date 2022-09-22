@@ -159,11 +159,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         instance.cooking_time = validated_data.get(
             'cooking_time', instance.cooking_time
         )
-        
         instance.tags.clear()
         tags = validated_data.get('tags')
         self.create_tags(tags, instance)
-        
         IngredientQuantity.objects.filter(recipe=instance).all().delete()
         ingredients = validated_data.get('ingredients')
         self.create_ingredients(ingredients, instance)
