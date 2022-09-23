@@ -12,7 +12,7 @@ from api.models import (
     Favorite, Ingredient,
     Recipe, ShoppingCart, Tag
 )
-from api.pagination import CustomPageNumberPagination
+# from api.pagination import CustomPageNumberPagination
 from api.permissions import IsAuthorOrReadOnly
 from api.serializers import (
     FavoriteSerializer, IngredientSerializer,
