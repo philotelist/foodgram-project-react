@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
@@ -40,7 +40,7 @@ class IngredientsViewSet(ReadOnlyModelViewSet):
 
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
-    permission_classes = [IsAuthorOrReadOnly, ]
+    permission_classes = [IsAuthenticatedOrReadOnly, ]
     filter_backends = [DjangoFilterBackend, ]
     filterset_class = RecipeFilter
     pagination_class = CustomPageNumberPagination
