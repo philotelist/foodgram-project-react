@@ -19,6 +19,7 @@ from api.serializers import (
     RecipeListSerializer, RecipeWriteSerializer,
     ShoppingCartSerializer, TagSerializer
 )
+from api.utils import ingredients_list
 
 
 class TagsViewSet(ReadOnlyModelViewSet):
@@ -90,16 +91,17 @@ class RecipeViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, permission_classes=[IsAuthenticated])
-    def download_shopping_cart(self, request):
-        ingredients = IngredientQuantity.objects.filter(
-            recipe__shopping_carts__user=request.user).values(
-            'ingredient__name', 'ingredient__measurement_unit', 'amount'
-        )
-        shopping_cart = '\n'.join([
-            f'{ingredient["ingredient__name"]} - {ingredient["amount"]} '
-            f'{ingredient["ingredient__measurement_unit"]}'
-            for ingredient in ingredients
-        ])
+    def download_shopping_cart(self, func):
+        # ingredients = IngredientQuantity.objects.filter(
+        #    recipe__shopping_carts__user=request.user).values(
+        #    'ingredient__name', 'ingredient__measurement_unit', 'amount'
+        # )
+        # shopping_cart = '\n'.join([
+        #    f'{ingredient["ingredient__name"]} - {ingredient["amount"]} '
+        #    f'{ingredient["ingredient__measurement_unit"]}'
+        #    for ingredient in ingredients
+        # ])
+        shopping_cart = ingredients_list()
         filename = 'shopping_cart.txt'
         response = HttpResponse(shopping_cart, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
