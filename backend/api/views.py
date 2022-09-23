@@ -3,7 +3,11 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (
+                                        AllowAny,
+                                        IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly
+)
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
@@ -13,7 +17,7 @@ from api.models import (
     Recipe, ShoppingCart, Tag
 )
 from api.pagination import CustomPageNumberPagination
-from api.permissions import IsAuthorOrReadOnly
+# from api.permissions import IsAuthorOrReadOnly
 from api.serializers import (
     FavoriteSerializer, IngredientSerializer,
     RecipeListSerializer, RecipeWriteSerializer,
