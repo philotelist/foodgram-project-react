@@ -12,7 +12,7 @@ from api.models import (
     Favorite, Ingredient,
     Recipe, ShoppingCart, Tag
 )
-# from api.pagination import CustomPageNumberPagination
+from api.pagination import CustomPageNumberPagination
 from api.permissions import IsAuthorOrReadOnly
 from api.serializers import (
     FavoriteSerializer, IngredientSerializer,
@@ -40,10 +40,10 @@ class IngredientsViewSet(ReadOnlyModelViewSet):
 
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
-    permission_classes = [IsAuthorOrReadOnly]
-    filter_backends = [DjangoFilterBackend]
+    permission_classes = [IsAuthorOrReadOnly,]
+    filter_backends = [DjangoFilterBackend,]
     filterset_class = RecipeFilter
-    pagination_class = None
+    pagination_class = CustomPageNumberPagination
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
