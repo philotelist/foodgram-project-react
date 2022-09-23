@@ -40,8 +40,8 @@ class IngredientsViewSet(ReadOnlyModelViewSet):
 
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
-    permission_classes = [IsAuthorOrReadOnly,]
-    filter_backends = [DjangoFilterBackend,]
+    permission_classes = [IsAuthorOrReadOnly, ]
+    filter_backends = [DjangoFilterBackend, ]
     filterset_class = RecipeFilter
     pagination_class = CustomPageNumberPagination
 
