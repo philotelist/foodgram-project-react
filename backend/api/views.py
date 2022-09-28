@@ -15,7 +15,6 @@ from api.models import (
     Recipe, ShoppingCart, Tag
 )
 from api.pagination import CustomPageNumberPagination
-# from api.permissions import IsAuthorOrReadOnly
 from api.serializers import (
     FavoriteSerializer, IngredientSerializer,
     RecipeListSerializer, RecipeWriteSerializer,
@@ -96,7 +95,10 @@ class RecipeViewSet(ModelViewSet):
         shopping_cart.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False, permission_classes=[IsAuthenticated])
+    @action(
+        detail=False, methods=['get'],
+        permission_classes=[IsAuthenticated]
+    )
     def download_shopping_cart(self):
         shopping_cart = ingredients_list()
         filename = 'shopping_cart.txt'
