@@ -1,3 +1,5 @@
+import math
+
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -99,11 +101,7 @@ class RecipeViewSet(ModelViewSet):
         detail=False, methods=['get'],
         permission_classes=[IsAuthenticated]
     )
-    def download_shopping_cart(self, request):
-        ingredients = Ingredient.objects.filter(
-            recipe__shopping_cart__user=request.user).values(
-            'ingredients__name',
-            'ingredients__measurement_unit').annotate(total=Sum('amount'))
+    def download_shopping_cart(self):
         shopping_cart = ingredients_list()
         filename = 'shopping_cart.txt'
         response = HttpResponse(shopping_cart, content_type='text/plain')
