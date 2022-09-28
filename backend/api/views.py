@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -12,7 +13,8 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from api.filters import IngredientSearchFilter, RecipeFilter
 from api.models import (
     Favorite, Ingredient,
-    Recipe, ShoppingCart, Tag
+    Recipe, ShoppingCart,
+    Tag, IngredientQuantity
 )
 from api.pagination import CustomPageNumberPagination
 from api.serializers import (
@@ -20,7 +22,7 @@ from api.serializers import (
     RecipeListSerializer, RecipeWriteSerializer,
     ShoppingCartSerializer, TagSerializer
 )
-from api.utils import ingredients_list
+from api.utils import get_cart
 
 
 class TagsViewSet(ReadOnlyModelViewSet):
@@ -99,8 +101,12 @@ class RecipeViewSet(ModelViewSet):
         detail=False, methods=['get'],
         permission_classes=[IsAuthenticated]
     )
-    def download_shopping_cart(self):
-        shopping_cart = ingredients_list()
+    def download_shopping_cart(self, request):
+        ingredients = IngredientQuantity.objects.filter(
+            recipe__shopping_cart__user=request.user).values(
+            'ingredients__name',
+            'ingredients__measurement_unit').annotate(total=Sum('amount'))
+        shopping_cart = get_cart(ingredients)
         filename = 'shopping_cart.txt'
         response = HttpResponse(shopping_cart, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
