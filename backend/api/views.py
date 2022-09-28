@@ -14,7 +14,7 @@ from api.filters import IngredientSearchFilter, RecipeFilter
 from api.models import (
     Favorite, Ingredient,
     Recipe, ShoppingCart,
-    Tag
+    Tag, IngredientQuantity
 )
 from api.pagination import CustomPageNumberPagination
 from api.serializers import (
@@ -102,7 +102,7 @@ class RecipeViewSet(ModelViewSet):
         permission_classes=[IsAuthenticated]
     )
     def download_shopping_cart(self, request):
-        ingredients = Ingredient.objects.filter(
+        ingredients = IngredientQuantity.objects.filter(
             recipe__shopping_cart__user=request.user).values(
             'ingredients__name',
             'ingredients__measurement_unit').annotate(total=Sum('amount'))
