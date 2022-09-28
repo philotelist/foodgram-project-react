@@ -96,7 +96,7 @@ class IngredientQuantity(models.Model):
     amount = models.PositiveSmallIntegerField(
         default=1,
         validators=[MinValueValidator(
-                1, 'Минимальное количество ингридиентов 1'),
+            1, 'Минимальное количество ингридиентов 1'),
         ],
         verbose_name='Количество',
     )
@@ -112,6 +112,7 @@ class IngredientQuantity(models.Model):
 
     def str(self):
         return f'{self.ingredients.name} - {self.amount}'
+
 
 class Favorite(models.Model):
     user = models.ForeignKey(
