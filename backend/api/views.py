@@ -10,19 +10,19 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from api.filters import IngredientSearchFilter, RecipeFilter
-from api.models import (
+from .filters import IngredientSearchFilter, RecipeFilter
+from .models import (
     Favorite, Ingredient,
     Recipe, ShoppingCart,
     Tag, IngredientQuantity
 )
-from api.pagination import CustomPageNumberPagination
-from api.serializers import (
+from .pagination import CustomPageNumberPagination
+from .serializers import (
     FavoriteSerializer, IngredientSerializer,
     RecipeListSerializer, RecipeWriteSerializer,
     ShoppingCartSerializer, TagSerializer
 )
-from api.utils import get_cart
+from .utils import get_cart
 
 
 class TagsViewSet(ReadOnlyModelViewSet):
@@ -98,17 +98,14 @@ class RecipeViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
-        detail=False, methods=['get'],
-        permission_classes=[IsAuthenticated]
+        methods=['get'], detail=False
     )
     def download_shopping_cart(self, request):
         ingredients = IngredientQuantity.objects.filter(
             recipe__shopping_cart__user=request.user).values(
             'ingredient__name',
             'ingredient__measurement_unit').annotate(total=Sum('amount'))
-        print(ingredients)
         shopping_cart = get_cart(ingredients)
-        print(shopping_cart)
         filename = 'shopping_cart.txt'
         response = HttpResponse(shopping_cart, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
