@@ -104,9 +104,11 @@ class RecipeViewSet(ModelViewSet):
     def download_shopping_cart(self, request):
         ingredients = IngredientQuantity.objects.filter(
             recipe__shopping_cart__user=request.user).values(
-            'ingredients__name',
-            'ingredients__measurement_unit').annotate(total=Sum('amount'))
+            'ingredient__name',
+            'ingredient__measurement_unit').annotate(total=Sum('amount'))
+        print(ingredients)
         shopping_cart = get_cart(ingredients)
+        print(shopping_cart)
         filename = 'shopping_cart.txt'
         response = HttpResponse(shopping_cart, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
