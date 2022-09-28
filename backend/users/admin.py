@@ -8,7 +8,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('id', 'username', 'email', 'first_name', 'last_name')
     search_fields = ('username', 'email')
     list_filter = ('username', 'email')
-    readonly_fields = ('date_joined', 'last_login', 'password',)
+    readonly_fields = ('date_joined', 'last_login')
 
 
 @admin.register(Follow)
