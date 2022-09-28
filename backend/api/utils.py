@@ -9,9 +9,8 @@ def ingredients_list(request):
             'ingredients__name',
             'ingredients__measurement_unit').annotate(total=Sum('amount')
     )
-    cart = '\n'.join([
+    return ('\n'.join([
         f'{ingredient["ingredients__name"]} - {ingredient["total"]} '
         f'{ingredient["ingredients__measurement_unit"]}'
-        for ingredient in ingredients
-    ])
-    return cart
+        for ingredient in ingredients])
+    )
