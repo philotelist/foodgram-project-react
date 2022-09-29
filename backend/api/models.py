@@ -111,7 +111,7 @@ class IngredientQuantity(models.Model):
         ]
 
     def str(self):
-        return f'{self.ingredients.name} - {self.amount}'
+        return f'{self.ingredient.name} - {self.amount}'
 
 
 class Favorite(models.Model):
