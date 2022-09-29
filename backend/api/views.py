@@ -1,4 +1,4 @@
-from django.db.models import Sum
+# from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -22,7 +22,6 @@ from .serializers import (
     RecipeListSerializer, RecipeWriteSerializer,
     ShoppingCartSerializer, TagSerializer
 )
-# from .utils import get_cart
 
 
 class TagsViewSet(ReadOnlyModelViewSet):
@@ -114,4 +113,4 @@ class RecipeViewSet(ModelViewSet):
         filename = 'shopping_cart.txt'
         response = HttpResponse(shopping_cart, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
-        return 
+        return
