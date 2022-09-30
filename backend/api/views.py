@@ -1,7 +1,10 @@
 # from django.db.models import Sum
+from http import HTTPStatus
+
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import (
@@ -16,12 +19,16 @@ from .models import (
     Recipe, ShoppingCart,
     Tag, IngredientQuantity
 )
+from users.models import Follow
 from .pagination import CustomPageNumberPagination
 from .serializers import (
     FavoriteSerializer, IngredientSerializer,
     RecipeListSerializer, RecipeWriteSerializer,
     ShoppingCartSerializer, TagSerializer
 )
+from users.serializers import FollowSerializer
+
+User = get_user_model()
 
 
 class TagsViewSet(ReadOnlyModelViewSet):
@@ -114,3 +121,59 @@ class RecipeViewSet(ModelViewSet):
         response = HttpResponse(shopping_cart, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return
+
+
+class FollowViewSet(UserViewSet):
+    pagination_class = CustomPageNumberPagination
+
+    @action(
+        methods=['post'],
+        detail=True,
+        permission_classes=[IsAuthenticated],
+    )
+    def subscribe(self, request, id=None):
+        user = request.user
+        author = get_object_or_404(User, id=id)
+        if user == author:
+            return Response(
+                'Нельзя подписаться на себя',
+                status=HTTPStatus.BAD_REQUEST
+            )
+        if Follow.objects.filter(user=user, author=author).exists():
+            return Response(
+                'Такая подписка уже существует',
+                status=HTTPStatus.BAD_REQUEST
+            )
+        follow = Follow.objects.create(user=user, author=author)
+        serializer = FollowSerializer(follow, context={'request': request})
+        return Response(serializer.data, status=HTTPStatus.CREATED)
+
+    @subscribe.mapping.delete
+    def delete_subscribe(self, request, id=None):
+        user = request.user
+        author = get_object_or_404(User, id=id)
+        if user == author:
+            return Response(
+                'Нельзя отписаться от самого себя',
+                status=HTTPStatus.BAD_REQUEST)
+        follow = Follow.objects.filter(user=user, author=author)
+        if not follow.exists():
+            return Response(
+                'Вы не подписаны',
+                status=HTTPStatus.BAD_REQUEST)
+        follow.delete()
+        return Response(status=HTTPStatus.NO_CONTENT)
+
+    @action(
+        detail=False,
+        permission_classes=[IsAuthenticated],
+    )
+    def subscriptions(self, request):
+        user = request.user
+        queryset = Follow.objects.filter(user=user)
+        pages = self.paginate_queryset(queryset)
+        serializer = FollowSerializer(
+            pages, many=True,
+            context={'request': request}
+        )
+        return self.get_paginated_response(serializer.data)
