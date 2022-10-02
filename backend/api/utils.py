@@ -3,7 +3,7 @@ from django.db.models import Sum
 from .models import IngredientQuantity
 
 
-def get_cart(request):
+def ingredients_list(request):
     ingredients = IngredientQuantity.objects.filter(
         recipe__shopping_carts__user=request.user).values(
         'ingredient__name',
