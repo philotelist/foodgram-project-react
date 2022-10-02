@@ -14,7 +14,7 @@ from .filters import IngredientSearchFilter, RecipeFilter
 from .models import (
     Favorite, Ingredient,
     Recipe, ShoppingCart,
-    Tag, IngredientQuantity
+    Tag
 )
 from .pagination import CustomPageNumberPagination
 from .serializers import (
