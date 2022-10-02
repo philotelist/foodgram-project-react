@@ -12,9 +12,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
-# from datetime import timedelta
-
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -168,8 +165,6 @@ DJOSER = {
     'PERMISSIONS': {
         'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
         'user_list': ['djoser.permissions.CurrentUserOrAdminOrReadOnly']
-        # 'user': ('rest_framework.permissions.IsAuthenticated',),
-        # 'user_list': ('rest_framework.permissions.AllowAny',),
     },
     'HIDE_USERS': False,
 }

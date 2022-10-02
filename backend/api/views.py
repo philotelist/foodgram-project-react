@@ -1,4 +1,4 @@
-# from django.db.models import Sum
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -103,8 +103,8 @@ class RecipeViewSet(ModelViewSet):
     def download_shopping_cart(self, request):
         ingredients = IngredientQuantity.objects.filter(
             recipe__shopping_carts__user=request.user).values(
-            'ingredient__name', 'ingredient__measurement_unit', 'amount'
-        )
+            'ingredient__name',
+            'ingredient__measurement_unit', 'amount').annotate(total=Sum('amount'))
         shopping_cart = '\n'.join([
             f'{ingredient["ingredient__name"]} - {ingredient["amount"]} '
             f'{ingredient["ingredient__measurement_unit"]}'
